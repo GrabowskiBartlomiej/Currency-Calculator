@@ -8,7 +8,8 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-    <title>Charity Donation</title>
+    <title>Currency Converter</title>
+
 
     <link rel="stylesheet" href="<c:url value="../../resources/css/style.css"/>"/>
 </head>
@@ -22,7 +23,7 @@
 <table class="center" style="text-align: center; font-size: 16px">
     <tr>
         <td><a href="/calculator/new-calculation" class="btn btn--without-border">Nowe przeliczenie</a></td>
-        <td><a href="#" class="btn btn--without-border">Twoje przeliczenia</a></td>
+        <td><a href="/calculator/all-calculations" class="btn btn--without-border">Twoje przeliczenia</a></td>
         <td><a href="#" class="btn btn--without-border">Stare kursy</a></td>
         <td><a href="#" class="btn btn--without-borde">button</a></td>
     </tr>

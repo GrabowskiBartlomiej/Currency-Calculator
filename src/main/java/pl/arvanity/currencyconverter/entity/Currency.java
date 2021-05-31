@@ -16,10 +16,10 @@ public class Currency {
     private long id;
     private String currency;
     private String code;
-    private String rate;
+    private double rate;
     private String rateFrom;
 
-    public Currency(String currency, String code, String rate, String rateFrom) {
+    public Currency(String currency, String code, double rate, String rateFrom) {
         this.currency = currency;
         this.code = code;
         this.rate = rate;

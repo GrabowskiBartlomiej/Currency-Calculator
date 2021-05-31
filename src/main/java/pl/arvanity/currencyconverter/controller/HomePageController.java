@@ -10,15 +10,14 @@ import pl.arvanity.currencyconverter.service.CurrencyService;
 @RequestMapping("/")
 public class HomePageController {
 
-    private CurrencyService currencyService;
+    private final CurrencyService currencyService;
 
     public HomePageController(CurrencyService currencyService) {
         this.currencyService = currencyService;
     }
 
     @GetMapping
-    public String homePage(Model model){
-        currencyService.getAllCurrenciesFromAPI();
+    public String homePage(Model model) {
         currencyService.loadAllCurrencies(model);
         return "index";
     }

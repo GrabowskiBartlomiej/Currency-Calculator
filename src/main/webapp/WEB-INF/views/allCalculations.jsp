@@ -20,19 +20,23 @@
 
 <h2>Witaj na przeliczniku walut online</h2>
 
-<p style="text-align: center">Dane z dnia: ${dateOfData}</p>
 <table id="customTables" class="center" style="text-align: center; font-size: 16px">
     <tr>
-        <th>Kod</th>
-        <th>Waluta</th>
-        <th>Kurs w stosunku do zł</th>
+        <th>Kwota</th>
+        <th>Z Waluty</th>
+        <th>Do Waluty</th>
+        <th>Kurs</th>
+        <th>Kwota Po Przeliczeniu</th>
+        <th>Kurs Z Dnia</th>
     </tr>
-    <c:forEach items="${allCurrencies}" var="currency">
+    <c:forEach items="${allCalculations}" var="calculation">
         <tr>
-            <td>${currency.code}</td>
-            <td>${currency.currency}</td>
-            <td><fmt:formatNumber type = "number"
-                                  maxFractionDigits = "4" value = "${currency.rate}" /></td>
+            <td>${calculation.moneyInput}</td>
+            <td>${calculation.currencyCodeFrom}</td>
+            <td>${calculation.currencyCodeTo}</td>
+            <td><fmt:formatNumber type = "number" maxFractionDigits = "4" value = "${calculation.rate}" /></td>
+            <td><fmt:formatNumber type = "number" maxFractionDigits = "2" value = "${calculation.moneyOutput}" /></td>
+            <td>${calculation.rateFrom}</td>
         </tr>
     </c:forEach>
 </table>

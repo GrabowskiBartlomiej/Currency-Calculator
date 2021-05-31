@@ -12,12 +12,14 @@
                     <ul>
                         <li><a href="/calculator" class="btn btn--without-border active">Do kalkulatora</a></li>
                         <li><a href="/about" class="btn btn--without-border">O co chodzi?</a></li>
+                        <li><a href="/" class="btn btn--without-border">Start</a></li>
                     </ul>
                 </c:when>
                 <c:otherwise>
                     <ul>
                         <li><a href="/calculator" class="btn btn--without-border active">Do kalkulatora</a></li>
                         <li><a href="/about" class="btn btn--without-border">O co chodzi?</a></li>
+                        <li><a href="/" class="btn btn--without-border">Start</a></li>
                         <li><form action="/logout" method="post"><button class="btn btn--without-border" type="submit">Wyloguj</button></form></li>
                     </ul>
                 </c:otherwise>

@@ -7,4 +7,6 @@ public interface CurrencyRepo extends JpaRepository<Currency, Long> {
 
 
     Currency findCurrencyById(long id);
+
+    Currency findCurrencyByCode(String currencyCodeFrom);
 }
