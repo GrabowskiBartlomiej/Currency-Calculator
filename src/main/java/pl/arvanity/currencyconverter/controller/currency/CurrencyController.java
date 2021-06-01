@@ -9,6 +9,8 @@ import pl.arvanity.currencyconverter.entity.Currency;
 import pl.arvanity.currencyconverter.service.CalculationService;
 import pl.arvanity.currencyconverter.service.CurrencyService;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -33,10 +35,20 @@ public class CurrencyController {
         return currencyService.getAllCurrencies();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public Currency getOne(@PathVariable long id) {
         return currencyService.getSingleCurrency(id);
     }
 
+    @GetMapping("rates/{codes}")
+    public List<Currency> getRatesByCodes(@PathVariable String codes){
+        codes = codes.toUpperCase();
+        List<String> singleCodes = Arrays.asList(codes.split("&"));
+        List<Currency> currencies = new ArrayList<>();
+        for(String code : singleCodes){
+            currencies.add(currencyService.getCurrencyByCode(code));
+        }
+        return currencies;
+    }
 
 }
