@@ -1,5 +1,6 @@
 package pl.arvanity.currencyconverter.service;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.client.RestTemplate;
@@ -11,6 +12,7 @@ import pl.arvanity.currencyconverter.repository.CurrencyRepo;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -48,11 +50,21 @@ public class CurrencyService {
     }
 
     @PostConstruct
+    @Scheduled(cron = "0 0 13 * * *")
     public void getAllCurrenciesFromApi() {
         Table[] table = restTemplate.getForObject("http://api.nbp.pl/api/exchangerates/tables/A?format=json", Table[].class);
         List<Rates> rates = Arrays.asList(table[0].getCurrencies());
+        List<Currency> currencies = currencyRepo.findAll();
         for (Rates rate : rates) {
-            saveCurrencyInDatabase(new Currency(rate.getCurrency(), rate.getCode(), rate.getRate(), table[0].getEffectiveDate()));
+            if (currencies.isEmpty()) {
+                saveCurrencyInDatabase(new Currency(rate.getCurrency(), rate.getCode(), rate.getRate(), table[0].getEffectiveDate()));
+            } else {
+                Currency currency = getCurrencyByCode(rate.getCode());
+                if(!(currency == null)){
+                    currency.setRate(rate.getRate());
+                    currency.setRateFrom(table[0].getEffectiveDate());
+                }
+            }
         }
         saveCurrencyInDatabase(new Currency("Polski złoty", "PLN", 1, table[0].getEffectiveDate()));
     }
@@ -63,13 +75,14 @@ public class CurrencyService {
         codes = codes.toUpperCase();
         List<String> singleCodes = Arrays.asList(codes.split("&"));
         List<Currency> currencies = new ArrayList<>();
-        for(String code : singleCodes){
+        for (String code : singleCodes) {
             currencies.add(getCurrencyByCode(code));
-            if(!(getCurrencyByCode(code) == null)){
+            if (!(getCurrencyByCode(code) == null)) {
                 description += code + ", ";
             }
         }
-        calculationService.saveServiceCall(null,"GET", "Pobierz kursy dla " + description, null);
+        calculationService.saveServiceCall(null, "GET", "Pobierz kursy dla " + description, null);
         return currencies;
     }
+
 }
