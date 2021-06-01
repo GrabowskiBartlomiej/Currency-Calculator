@@ -1,11 +1,9 @@
 package pl.arvanity.currencyconverter.controller.currency;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.arvanity.currencyconverter.entity.Calculation;
 import pl.arvanity.currencyconverter.entity.Currency;
+import pl.arvanity.currencyconverter.entity.ServiceCalls;
 import pl.arvanity.currencyconverter.service.CalculationService;
 import pl.arvanity.currencyconverter.service.CurrencyService;
 
@@ -23,11 +21,6 @@ public class CurrencyController {
     public CurrencyController(CurrencyService currencyService, CalculationService calculationService) {
         this.currencyService = currencyService;
         this.calculationService = calculationService;
-    }
-
-    @GetMapping("{inputMoney}/{currencyCodeFrom}/{currencyCodeTo}")
-    public Calculation convert(@PathVariable double inputMoney, @PathVariable String currencyCodeFrom, @PathVariable String currencyCodeTo) {
-        return calculationService.convertCurrency(inputMoney, currencyCodeFrom.toUpperCase(), currencyCodeTo.toUpperCase());
     }
 
     @GetMapping
@@ -49,6 +42,27 @@ public class CurrencyController {
             currencies.add(currencyService.getCurrencyByCode(code));
         }
         return currencies;
+    }
+
+    @PostMapping("{inputMoney}/{currencyCodeFrom}/{currencyCodeTo}")
+    public Calculation convert(@PathVariable double inputMoney, @PathVariable String currencyCodeFrom, @PathVariable String currencyCodeTo) {
+        return calculationService.convertCurrency(inputMoney, currencyCodeFrom.toUpperCase(), currencyCodeTo.toUpperCase());
+    }
+
+    @GetMapping("calculations")
+    public List<Calculation> getAllCalculations(){
+        return calculationService.getAllCalculations();
+    }
+
+     @DeleteMapping("calculations/{id}")
+    public List<Calculation> deleteOnId(@PathVariable Long id){
+        calculationService.deleteOnId(id);
+        return calculationService.getAllCalculations();
+    }
+
+    @GetMapping("service-calls")
+    public List<ServiceCalls> getAllServiceCalls(){
+        return calculationService.getAllServiceCalls();
     }
 
 }
