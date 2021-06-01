@@ -6,10 +6,16 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 
 @SpringBootApplication
 @EnableScheduling
+@EnableSwagger2
 public class CurrencyConverterApplication {
 
     public static void main(String[] args) {
@@ -20,5 +26,14 @@ public class CurrencyConverterApplication {
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder.build();
     }
+
+    @Bean
+    public Docket get(){
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select()
+                .apis( RequestHandlerSelectors.basePackage( "pl.arvanity.currencyconverter.controller.currency" ) )
+                .build();
+    }
+
 
 }

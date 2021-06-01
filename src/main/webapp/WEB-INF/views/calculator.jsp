@@ -24,8 +24,6 @@
     <tr>
         <td><a href="/calculator/new-calculation" class="btn btn--without-border">Nowe przeliczenie</a></td>
         <td><a href="/calculator/all-calculations" class="btn btn--without-border">Twoje przeliczenia</a></td>
-        <td><a href="#" class="btn btn--without-border">Stare kursy</a></td>
-        <td><a href="#" class="btn btn--without-borde">button</a></td>
     </tr>
 </table>
 

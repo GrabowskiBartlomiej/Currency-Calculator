@@ -12,7 +12,6 @@ import pl.arvanity.currencyconverter.repository.CurrencyRepo;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -28,6 +27,7 @@ public class CurrencyService {
         this.calculationService = calculationService;
     }
 
+
     public void saveCurrencyInDatabase(Currency currency) {
         currencyRepo.save(currency);
     }
@@ -39,7 +39,7 @@ public class CurrencyService {
 
 
     public List<Currency> getAllCurrencies() {
-        calculationService.saveServiceCall(null, "GET", "Pobierz listę wszystkich kursów", null);
+        calculationService.saveServiceCall(null, "GET", "Pobieranie listy wszystkich kursów z bazy danych", null);
         return currencyRepo.findAll();
     }
 
@@ -48,6 +48,7 @@ public class CurrencyService {
         model.addAttribute("allCurrencies", currencyRepo.findAll());
         model.addAttribute("dateOfData", currencyRepo.findCurrencyById(1).getRateFrom());
     }
+
 
     @PostConstruct
     @Scheduled(cron = "0 0 13 * * *")
@@ -60,13 +61,14 @@ public class CurrencyService {
                 saveCurrencyInDatabase(new Currency(rate.getCurrency(), rate.getCode(), rate.getRate(), table[0].getEffectiveDate()));
             } else {
                 Currency currency = getCurrencyByCode(rate.getCode());
-                if(!(currency == null)){
+                if (!(currency == null)) {
                     currency.setRate(rate.getRate());
                     currency.setRateFrom(table[0].getEffectiveDate());
                 }
             }
         }
         saveCurrencyInDatabase(new Currency("Polski złoty", "PLN", 1, table[0].getEffectiveDate()));
+        calculationService.saveServiceCall(null, "GET", "Pobranie wszystkich kursów z NBP API i zapisywanie do bazy danych", null);
     }
 
 
@@ -76,13 +78,14 @@ public class CurrencyService {
         List<String> singleCodes = Arrays.asList(codes.split("&"));
         List<Currency> currencies = new ArrayList<>();
         for (String code : singleCodes) {
-            currencies.add(getCurrencyByCode(code));
             if (!(getCurrencyByCode(code) == null)) {
+                currencies.add(getCurrencyByCode(code));
                 description += code + ", ";
             }
         }
-        calculationService.saveServiceCall(null, "GET", "Pobierz kursy dla " + description, null);
+        calculationService.saveServiceCall(null, "GET", "Pobieranie kursów dla " + description, null);
         return currencies;
     }
+
 
 }

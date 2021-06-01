@@ -26,7 +26,7 @@ public class CalculationService {
         double outputMoney = rate * inputMoney;
         Calculation calculation = new Calculation(inputMoney, from.getCode(), to.getCode(), rate, outputMoney, to.getRateFrom());
         calculationRepo.save(calculation);
-        saveServiceCall(null, "POST", "Dodaj przeliczenie", calculation);
+        saveServiceCall(null, "POST", "Dodawanie przeliczenia", calculation);
         return calculation;
     }
 
@@ -36,13 +36,16 @@ public class CalculationService {
     }
 
     public List<Calculation> getAllCalculations() {
-        saveServiceCall(null, "GET", "Pobierz listę przeliczeń", null);
+        saveServiceCall(null, "GET", "Pobieranie listy przeliczeń", null);
         return calculationRepo.findAll();
     }
 
     public void deleteOnId(Long id) {
-        saveServiceCall(id, "DELETE", "Usuń przeliczenie o id " + id, null);
-        calculationRepo.delete(calculationRepo.findCalculationById(id));
+        Calculation calculation = calculationRepo.findCalculationById(id);
+        if (!(calculation == null)) {
+            saveServiceCall(id, "DELETE", "Usuwanie przeliczenia o id " + id, null);
+            calculationRepo.delete(calculationRepo.findCalculationById(id));
+        }
     }
 
     public Calculation getSingleCalculationOnId(Long id) {
@@ -63,6 +66,7 @@ public class CalculationService {
     }
 
     public List<ServiceCalls> getAllServiceCalls() {
+        saveServiceCall(null, "GET", "Pobieranie listy wszystkich wywołań na dostępnych usługach", null);
         return serviceCallsRepo.findAll();
     }
 
