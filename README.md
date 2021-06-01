@@ -1,5 +1,5 @@
 # Currency-Calculator
-Currency calculator exercise for Kanbu. Junior Java Developer.
+Currency calculator exercise for Kambu. Junior Java Developer.
 
 Functionalities:
 * loading currencies from NBP API and saving as objects in SQL DB on startup,
