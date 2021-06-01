@@ -9,6 +9,7 @@ import pl.arvanity.currencyconverter.model.Table;
 import pl.arvanity.currencyconverter.repository.CurrencyRepo;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,20 +18,16 @@ public class CurrencyService {
 
     private final RestTemplate restTemplate;
     private final CurrencyRepo currencyRepo;
+    private final CalculationService calculationService;
 
-    public CurrencyService(RestTemplate restTemplate, CurrencyRepo currencyRepo) {
+    public CurrencyService(RestTemplate restTemplate, CurrencyRepo currencyRepo, CalculationService calculationService) {
         this.restTemplate = restTemplate;
         this.currencyRepo = currencyRepo;
+        this.calculationService = calculationService;
     }
-
 
     public void saveCurrencyInDatabase(Currency currency) {
         currencyRepo.save(currency);
-    }
-
-
-    public Currency getSingleCurrency(Long id) {
-        return currencyRepo.findCurrencyById(id);
     }
 
 
@@ -40,6 +37,7 @@ public class CurrencyService {
 
 
     public List<Currency> getAllCurrencies() {
+        calculationService.saveServiceCall(null, "GET", "Pobierz listę wszystkich kursów", null);
         return currencyRepo.findAll();
     }
 
@@ -60,4 +58,18 @@ public class CurrencyService {
     }
 
 
+    public List<Currency> getCurrenciesByCodes(String codes) {
+        String description = "";
+        codes = codes.toUpperCase();
+        List<String> singleCodes = Arrays.asList(codes.split("&"));
+        List<Currency> currencies = new ArrayList<>();
+        for(String code : singleCodes){
+            currencies.add(getCurrencyByCode(code));
+            if(!(getCurrencyByCode(code) == null)){
+                description += code + ", ";
+            }
+        }
+        calculationService.saveServiceCall(null,"GET", "Pobierz kursy dla " + description, null);
+        return currencies;
+    }
 }

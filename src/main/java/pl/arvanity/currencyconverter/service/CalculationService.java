@@ -14,21 +14,17 @@ import java.util.List;
 public class CalculationService {
 
     private final CalculationRepo calculationRepo;
-    private final CurrencyService currencyService;
     private final ServiceCallsRepo serviceCallsRepo;
 
-    public CalculationService(CalculationRepo calculationRepo, CurrencyService currencyService, ServiceCallsRepo serviceCallsRepo) {
+    public CalculationService(CalculationRepo calculationRepo, ServiceCallsRepo serviceCallsRepo) {
         this.calculationRepo = calculationRepo;
-        this.currencyService = currencyService;
         this.serviceCallsRepo = serviceCallsRepo;
     }
 
-    public Calculation convertCurrency(double inputMoney, String currencyCodeFrom, String currencyCodeTo) {
-        Currency from = currencyService.getCurrencyByCode(currencyCodeFrom);
-        Currency to = currencyService.getCurrencyByCode(currencyCodeTo);
+    public Calculation convertCurrency(double inputMoney, Currency from, Currency to) {
         double rate = (from.getRate() / to.getRate());
         double outputMoney = rate * inputMoney;
-        Calculation calculation = new Calculation(inputMoney, currencyCodeFrom, currencyCodeTo, rate, outputMoney, to.getRateFrom());
+        Calculation calculation = new Calculation(inputMoney, from.getCode(), to.getCode(), rate, outputMoney, to.getRateFrom());
         calculationRepo.save(calculation);
         saveServiceCall(null, "POST", "Dodaj przeliczenie", calculation);
         return calculation;

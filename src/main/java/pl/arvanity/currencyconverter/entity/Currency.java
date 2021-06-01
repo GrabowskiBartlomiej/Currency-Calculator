@@ -1,5 +1,6 @@
 package pl.arvanity.currencyconverter.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import javax.persistence.*;
@@ -7,6 +8,7 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_DEFAULT)
 @Entity
 @Table(name = "currencies")
 public class Currency {
