@@ -24,3 +24,5 @@ Technologies used:
 * REST
 * JSON
 * Lombok
+* jsp
+* CSS
