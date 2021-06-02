@@ -1,6 +1,13 @@
 # Currency-Calculator
 Currency calculator exercise for Kambu. Junior Java Developer.
 
+* swagger ui available under http://localhost:8080/swagger-ui/#/
+* Docker instructions #
+  * clone the repository
+  * open the repository path in terminal
+  * type command:    docker-compose up
+  * enjoy!
+
 Functionalities:
 * loading currencies from NBP API and saving as objects in SQL DB on startup,
 * REST:
@@ -11,7 +18,7 @@ Functionalities:
   * returning list of currency objects by given code in GET Request : http://localhost:8080/currencies/rates/{code}&{code}&...
   * all operations are being saved with details as objects in DB and reachable from GET Request : http://localhost:8080/currencies/service-calls
 
-* swagger ui available under http://localhost:8080/swagger-ui/#/
+
   
 * WEB:
   * home page with all the currencies in table
