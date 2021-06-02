@@ -75,7 +75,7 @@ public class CurrencyService {
     public List<Currency> getCurrenciesByCodes(String codes) {
         String description = "";
         codes = codes.toUpperCase();
-        List<String> singleCodes = Arrays.asList(codes.split("&"));
+        List<String> singleCodes = Arrays.asList(codes.split(","));
         List<Currency> currencies = new ArrayList<>();
         for (String code : singleCodes) {
             if (!(getCurrencyByCode(code) == null)) {

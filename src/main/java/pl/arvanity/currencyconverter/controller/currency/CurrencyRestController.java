@@ -11,15 +11,16 @@ import pl.arvanity.currencyconverter.service.CalculationService;
 import pl.arvanity.currencyconverter.service.CurrencyService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("currencies")
-public class CurrencyApi {
+public class CurrencyRestController {
 
     private final CurrencyService currencyService;
     private final CalculationService calculationService;
 
-    public CurrencyApi(CurrencyService currencyService, CalculationService calculationService) {
+    public CurrencyRestController(CurrencyService currencyService, CalculationService calculationService) {
         this.currencyService = currencyService;
         this.calculationService = calculationService;
     }
@@ -27,8 +28,10 @@ public class CurrencyApi {
 
     @ApiOperation(value = "Lista wszystkich kursów z NBP API")
     @GetMapping
-    public List<Currency> getAll() {
-        return currencyService.getAllCurrencies();
+    public List<CurrencyResponse> getAll() {
+        return currencyService.getAllCurrencies().stream()
+                .map(s -> CurrencyResponse.of(s))
+                .collect(Collectors.toList());
     }
 
 
@@ -54,9 +57,9 @@ public class CurrencyApi {
     }
 
 
-    @ApiOperation(value = "Lista kursów wybranych przez kod kursu", notes = "Oddzielaj kody za pomoca \"&\"")
+    @ApiOperation(value = "Lista kursów wybranych przez kod kursu", notes = "Oddzielaj kody za pomoca \",\"")
     @GetMapping("rates/{codes}")
-    public List<Currency> getCurrenciesByCodes(@ApiParam(value = "unikatowy trzyliterowy kod kursu", example = "pln&eur&gbp") @PathVariable String codes) {
+    public List<Currency> getCurrenciesByCodes(@ApiParam(value = "unikatowy trzyliterowy kod kursu", example = "pln,eur,gbp") @PathVariable String codes) {
         return currencyService.getCurrenciesByCodes(codes);
     }
 
