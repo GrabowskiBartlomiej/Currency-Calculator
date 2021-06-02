@@ -9,7 +9,6 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "currencies")
 public class Currency {
 
     @Id
