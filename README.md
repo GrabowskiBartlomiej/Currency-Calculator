@@ -10,6 +10,8 @@ Functionalities:
   * deleting calculation object on id in DELETE Request also removing it from DB : http://localhost:8080/currencies/calculations/{id}
   * returning list of currency objects by given code in GET Request : http://localhost:8080/currencies/rates/{code}&{code}&...
   * all operations are being saved with details as objects in DB and reachable from GET Request : http://localhost:8080/currencies/service-calls
+
+* swagger ui available under http://localhost:8080/swagger-ui/#/
   
 * WEB:
   * home page with all the currencies in table
