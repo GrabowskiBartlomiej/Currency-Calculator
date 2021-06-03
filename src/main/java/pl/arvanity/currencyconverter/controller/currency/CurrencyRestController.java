@@ -10,6 +10,7 @@ import pl.arvanity.currencyconverter.model.ServiceCallsResponse;
 import pl.arvanity.currencyconverter.service.CalculationService;
 import pl.arvanity.currencyconverter.service.CurrencyService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,13 +27,42 @@ public class CurrencyRestController {
     }
 
 
+
+
+
+
+
+
     @ApiOperation(value = "List of all currencies from NBP API")
     @GetMapping
-    public List<CurrencyResponse> getAll() {
+    public List<CurrencyResponse> getAll(HttpServletRequest req) throws InterruptedException {
+
+        String delayHeader = req.getHeader("delay");
+
+        System.out.println(delayHeader);
+        System.out.println(System.getenv("HEADER"));
+
+        if(delayHeader!= null){
+            Long delay = Long.parseLong(delayHeader);
+            if(delay >= 0){
+                Thread.sleep(delay);
+            }
+        }
+
         return currencyService.getAllCurrencies().stream()
                 .map(c -> CurrencyResponse.of(c))
                 .collect(Collectors.toList());
     }
+
+
+
+
+
+
+
+
+
+
 
 
     /*returning object only for purpose of showing user-friendly messages*/

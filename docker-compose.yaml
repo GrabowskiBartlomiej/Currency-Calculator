@@ -9,14 +9,75 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: password
     restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", 'mysqladmin ping' ]
+      interval: 10s
+      timeout: 2s
+      retries: 10
   app:
     container_name: kambu_app
     build: .
     ports:
-      - "8080:8080"
+      - "8090:8080"
     depends_on:
-      - database
+      database:
+          condition: service_healthy
     environment:
       DB_USERNAME: root
       DB_PASSWORD: coderslab
       DB_HOST: database
+      HEADER: "this is app 1"
+    restart: unless-stopped
+    healthcheck:
+      test:  curl --fail localhost:8080/currencies/service-calls || exit 1
+      interval: 10s
+      timeout: 2s
+      retries: 10
+  app2:
+    container_name: kambu_app2
+    build: .
+    ports:
+      - "8091:8080"
+    depends_on:
+      database:
+          condition: service_healthy
+      app:
+        condition: service_healthy
+    environment:
+      DB_USERNAME: root
+      DB_PASSWORD: coderslab
+      DB_HOST: database
+      HEADER: "this is app 2"
+    restart: unless-stopped
+  app3:
+    container_name: kambu_app3
+    build: .
+    ports:
+      - "8092:8080"
+    depends_on:
+      database:
+          condition: service_healthy
+      app:
+          condition: service_healthy
+    environment:
+      DB_USERNAME: root
+      DB_PASSWORD: coderslab
+      DB_HOST: database
+      HEADER: "this is app 3"
+    restart: unless-stopped
+  nginx:
+    image: nginx
+    container_name: kambu_nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "8080:8080"
+    depends_on:
+      - app
+      - app2
+      - app3
+    environment:
+      NGINX_HOST: localhost
+      NGINX_PORT: 8080
+    restart: unless-stopped
+
