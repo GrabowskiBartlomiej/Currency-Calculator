@@ -2,6 +2,7 @@ package pl.arvanity.currencyconverter.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import pl.arvanity.currencyconverter.entity.Calculation;
 import pl.arvanity.currencyconverter.entity.Currency;
 import pl.arvanity.currencyconverter.entity.ServiceCalls;
@@ -23,20 +24,17 @@ public class CalculationService {
     }
 
     public Calculation convertCurrency(double inputMoney, Currency from, Currency to) {
-        double rate = (from.getRate() / to.getRate());
-        double outputMoney = rate * inputMoney;
-        DecimalFormat df = new DecimalFormat("#.##");
-        df.setMinimumFractionDigits(2);
-        String out = df.format(outputMoney);
-        out = out.replace(",", ".");
-        System.out.println(out);
-        outputMoney = Double.parseDouble(out);
-        System.out.println(outputMoney);
+        if (inputMoney >= 0) {
+            double rate = (from.getRate() / to.getRate());
+            double outputMoney = round(rate * inputMoney);
 
-        Calculation calculation = new Calculation(inputMoney, from.getCode(), to.getCode(), rate, outputMoney, to.getRateFrom());
-        calculationRepo.save(calculation);
-        saveServiceCall(null, "POST", "Add a calculation", calculation);
-        return calculation;
+            Calculation calculation = new Calculation(inputMoney, from.getCode(), to.getCode(), rate, outputMoney, to.getRateFrom());
+            calculationRepo.save(calculation);
+            saveServiceCall(null, "POST", "Add a calculation", calculation);
+            return calculation;
+        }else {
+            return null;
+        }
     }
 
 
@@ -50,11 +48,11 @@ public class CalculationService {
     }
 
     public void deleteOnId(Long id) {
-        Calculation calculation = calculationRepo.findCalculationById(id);
-        if (!(calculation == null)) {
-            saveServiceCall(id, "DELETE", "Delete the calculation on id " + id, null);
-            calculationRepo.delete(calculationRepo.findCalculationById(id));
-        }
+//        Calculation calculation = calculationRepo.findCalculationById(id);
+//        if (!(calculation == null)) {
+        saveServiceCall(id, "DELETE", "Delete the calculation on id " + id, null);
+        calculationRepo.delete(calculationRepo.findCalculationById(id));
+//        }
     }
 
     public Calculation getSingleCalculationOnId(Long id) {
@@ -87,6 +85,14 @@ public class CalculationService {
         serviceCalls.setRate(calculation.getRate());
         serviceCalls.setRateFrom(calculation.getRateFrom());
         return serviceCalls;
+    }
+
+
+    private double round(double outputMoney) {
+        DecimalFormat df = new DecimalFormat("#0.00");
+        String out = df.format(outputMoney);
+        out = out.replace(",", ".");
+        return Double.parseDouble(out);
     }
 
 }

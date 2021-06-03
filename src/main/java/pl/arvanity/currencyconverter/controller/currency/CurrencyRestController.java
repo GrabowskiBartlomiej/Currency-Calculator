@@ -3,6 +3,7 @@ package pl.arvanity.currencyconverter.controller.currency;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
+import pl.arvanity.currencyconverter.entity.Calculation;
 import pl.arvanity.currencyconverter.model.CalculationResponse;
 import pl.arvanity.currencyconverter.model.CurrencyResponse;
 import pl.arvanity.currencyconverter.model.ServiceCallsResponse;
@@ -37,10 +38,19 @@ public class CurrencyRestController {
     @ApiOperation(value = "Convert the money from currency A to currency B",
             notes = "The code should link as follows -> http://localhost:8080/currencies/convert?currencyCodeFrom=eur&currencyCodeTo=pln&inputMoney=1000")
     @PostMapping("/convert")
-    public CalculationResponse convert(@ApiParam(value = "Input", example = "1000") @RequestParam double inputMoney,
-                                       @ApiParam(value = "Currency code", example = "eur") @RequestParam String currencyCodeFrom,
-                                       @ApiParam(value = "Target currency code", example = "pln") @RequestParam String currencyCodeTo) {
-        return CalculationResponse.of(calculationService.convertCurrency(inputMoney, currencyService.getCurrencyByCode(currencyCodeFrom), currencyService.getCurrencyByCode(currencyCodeTo)));
+    public Object convert(@ApiParam(value = "Input", example = "333") @RequestParam double inputMoney,
+                          @ApiParam(value = "Currency code", example = "eur") @RequestParam String currencyCodeFrom,
+                          @ApiParam(value = "Target currency code", example = "pln") @RequestParam String currencyCodeTo) {
+        try {
+            Calculation c = calculationService.convertCurrency(inputMoney, currencyService.getCurrencyByCode(currencyCodeFrom), currencyService.getCurrencyByCode(currencyCodeTo));
+            if (c == null) {
+                return "Input has to be equal to 0 or higher";
+            } else {
+                return CalculationResponse.of(c);
+            }
+        } catch (Exception e) {
+            return "Data you used are not correct";
+        }
     }
 
 
@@ -55,11 +65,13 @@ public class CurrencyRestController {
 
     @ApiOperation(value = "Delete calculation, selected by id ", notes = "on success displays list of remaining calculations")
     @DeleteMapping("calculations/{id}")
-    public List<CalculationResponse> deleteOnId(@ApiParam(value = "unique value id", example = "1") @PathVariable Long id) {
-        calculationService.deleteOnId(id);
-        return calculationService.getAllCalculations().stream()
-                .map(c -> CalculationResponse.of(c))
-                .collect(Collectors.toList());
+    public String deleteOnId(@ApiParam(value = "unique value id", example = "1") @PathVariable Long id) {
+        try {
+            calculationService.deleteOnId(id);
+            return "Calculation with id " + id + " has been deleted.";
+        } catch (NullPointerException e) {
+            return "There is no calculation with such id.";
+        }
     }
 
 
