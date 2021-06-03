@@ -21,7 +21,7 @@ services:
       - "8090:8080"
     depends_on:
       database:
-          condition: service_healthy
+        condition: service_healthy
     environment:
       DB_USERNAME: root
       DB_PASSWORD: coderslab
@@ -29,7 +29,7 @@ services:
       HEADER: "this is app 1"
     restart: unless-stopped
     healthcheck:
-      test:  curl --fail localhost:8080/currencies/service-calls || exit 1
+      test: curl --fail localhost:8080/currencies/service-calls || exit 1
       interval: 10s
       timeout: 2s
       retries: 10
@@ -40,7 +40,7 @@ services:
       - "8091:8080"
     depends_on:
       database:
-          condition: service_healthy
+        condition: service_healthy
       app:
         condition: service_healthy
     environment:
@@ -56,9 +56,9 @@ services:
       - "8092:8080"
     depends_on:
       database:
-          condition: service_healthy
+        condition: service_healthy
       app:
-          condition: service_healthy
+        condition: service_healthy
     environment:
       DB_USERNAME: root
       DB_PASSWORD: coderslab

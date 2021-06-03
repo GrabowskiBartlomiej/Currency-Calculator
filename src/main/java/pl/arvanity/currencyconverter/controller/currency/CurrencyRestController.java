@@ -27,24 +27,17 @@ public class CurrencyRestController {
     }
 
 
-
-
-
-
-
-
     @ApiOperation(value = "List of all currencies from NBP API")
     @GetMapping
     public List<CurrencyResponse> getAll(HttpServletRequest req) throws InterruptedException {
 
         String delayHeader = req.getHeader("delay");
 
-        System.out.println(delayHeader);
         System.out.println(System.getenv("HEADER"));
 
-        if(delayHeader!= null){
+        if (delayHeader != null) {
             Long delay = Long.parseLong(delayHeader);
-            if(delay >= 0){
+            if (delay >= 0) {
                 Thread.sleep(delay);
             }
         }
@@ -53,16 +46,6 @@ public class CurrencyRestController {
                 .map(c -> CurrencyResponse.of(c))
                 .collect(Collectors.toList());
     }
-
-
-
-
-
-
-
-
-
-
 
 
     /*returning object only for purpose of showing user-friendly messages*/
