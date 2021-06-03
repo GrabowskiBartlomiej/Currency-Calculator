@@ -13,19 +13,19 @@ public class Calculation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private double moneyInput;
+    private double inputValue;
     private String currencyCodeFrom;
     private String currencyCodeTo;
     private double rate;
-    private double moneyOutput;
+    private double outputValue;
     private String rateFrom;
 
-    public Calculation(double moneyInput, String currencyCodeFrom, String currencyCodeTo, double rate, double moneyOutput, String rateFrom) {
-        this.moneyInput = moneyInput;
+    public Calculation(double inputValue, String currencyCodeFrom, String currencyCodeTo, double rate, double outputValue, String rateFrom) {
+        this.inputValue = inputValue;
         this.currencyCodeFrom = currencyCodeFrom;
         this.currencyCodeTo = currencyCodeTo;
         this.rate = rate;
-        this.moneyOutput = moneyOutput;
+        this.outputValue = outputValue;
         this.rateFrom = rateFrom;
     }
 }

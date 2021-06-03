@@ -1,4 +1,4 @@
-package pl.arvanity.currencyconverter.controller.currency;
+package pl.arvanity.currencyconverter.model;
 
 import lombok.Builder;
 import lombok.Getter;

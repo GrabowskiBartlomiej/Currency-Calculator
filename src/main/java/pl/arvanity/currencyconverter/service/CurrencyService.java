@@ -39,7 +39,7 @@ public class CurrencyService {
 
 
     public List<Currency> getAllCurrencies() {
-        calculationService.saveServiceCall(null, "GET", "Pobieranie listy wszystkich kursów z bazy danych", null);
+        calculationService.saveServiceCall(null, "GET", "Get the list of all currencies from database", null);
         return currencyRepo.findAll();
     }
 
@@ -67,8 +67,10 @@ public class CurrencyService {
                 }
             }
         }
-        saveCurrencyInDatabase(new Currency("Polski złoty", "PLN", 1, table[0].getEffectiveDate()));
-        calculationService.saveServiceCall(null, "GET", "Pobranie wszystkich kursów z NBP API i zapisywanie do bazy danych", null);
+        if(currencyRepo.findCurrencyByCode("PLN") == null){
+            saveCurrencyInDatabase(new Currency("polski złoty", "PLN", 1, table[0].getEffectiveDate()));
+        }
+        calculationService.saveServiceCall(null, "GET", "Download the currencies from NBP API and save in database", null);
     }
 
 
@@ -83,7 +85,7 @@ public class CurrencyService {
                 description += code + ", ";
             }
         }
-        calculationService.saveServiceCall(null, "GET", "Pobieranie kursów dla " + description, null);
+        calculationService.saveServiceCall(null, "GET", "Get the currencies for " + description, null);
         return currencies;
     }
 

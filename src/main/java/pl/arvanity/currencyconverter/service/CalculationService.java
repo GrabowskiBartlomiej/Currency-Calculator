@@ -8,6 +8,7 @@ import pl.arvanity.currencyconverter.entity.ServiceCalls;
 import pl.arvanity.currencyconverter.repository.CalculationRepo;
 import pl.arvanity.currencyconverter.repository.ServiceCallsRepo;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 @Service
@@ -24,9 +25,17 @@ public class CalculationService {
     public Calculation convertCurrency(double inputMoney, Currency from, Currency to) {
         double rate = (from.getRate() / to.getRate());
         double outputMoney = rate * inputMoney;
+        DecimalFormat df = new DecimalFormat("#.##");
+        df.setMinimumFractionDigits(2);
+        String out = df.format(outputMoney);
+        out = out.replace(",", ".");
+        System.out.println(out);
+        outputMoney = Double.parseDouble(out);
+        System.out.println(outputMoney);
+
         Calculation calculation = new Calculation(inputMoney, from.getCode(), to.getCode(), rate, outputMoney, to.getRateFrom());
         calculationRepo.save(calculation);
-        saveServiceCall(null, "POST", "Dodawanie przeliczenia", calculation);
+        saveServiceCall(null, "POST", "Add a calculation", calculation);
         return calculation;
     }
 
@@ -36,14 +45,14 @@ public class CalculationService {
     }
 
     public List<Calculation> getAllCalculations() {
-        saveServiceCall(null, "GET", "Pobieranie listy przeliczeń", null);
+        saveServiceCall(null, "GET", "Get the list of all calculations", null);
         return calculationRepo.findAll();
     }
 
     public void deleteOnId(Long id) {
         Calculation calculation = calculationRepo.findCalculationById(id);
         if (!(calculation == null)) {
-            saveServiceCall(id, "DELETE", "Usuwanie przeliczenia o id " + id, null);
+            saveServiceCall(id, "DELETE", "Delete the calculation on id " + id, null);
             calculationRepo.delete(calculationRepo.findCalculationById(id));
         }
     }
@@ -66,15 +75,15 @@ public class CalculationService {
     }
 
     public List<ServiceCalls> getAllServiceCalls() {
-        saveServiceCall(null, "GET", "Pobieranie listy wszystkich wywołań na dostępnych usługach", null);
+        saveServiceCall(null, "GET", "Get the list of all service calls so far", null);
         return serviceCallsRepo.findAll();
     }
 
     public ServiceCalls fillServiceCallWithCalculationData(ServiceCalls serviceCalls, Calculation calculation) {
-        serviceCalls.setMoneyInput(calculation.getMoneyInput());
+        serviceCalls.setInputValue(calculation.getInputValue());
         serviceCalls.setCurrencyCodeFrom(calculation.getCurrencyCodeFrom());
         serviceCalls.setCurrencyCodeTo(calculation.getCurrencyCodeTo());
-        serviceCalls.setMoneyOutput(calculation.getMoneyOutput());
+        serviceCalls.setOutputValue(calculation.getOutputValue());
         serviceCalls.setRate(calculation.getRate());
         serviceCalls.setRateFrom(calculation.getRateFrom());
         return serviceCalls;

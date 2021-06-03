@@ -19,11 +19,11 @@ public class ServiceCalls {
     private long id;
     private String method;
     private String action;
-    private double moneyInput;
+    private double inputValue;
     private String currencyCodeFrom;
     private String currency;
     private String currencyCodeTo;
-    private double moneyOutput;
+    private double outputValue;
     private double rate;
     private String rateFrom;
     private Date operationDate = new Date();
