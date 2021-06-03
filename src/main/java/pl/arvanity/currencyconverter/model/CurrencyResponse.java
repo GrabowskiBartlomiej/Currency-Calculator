@@ -8,7 +8,7 @@ import pl.arvanity.currencyconverter.entity.Currency;
 @Builder
 public class CurrencyResponse {
 
-    public static CurrencyResponse of(Currency inputCurrency){
+    public static CurrencyResponse of(Currency inputCurrency) {
 
         return CurrencyResponse.builder()
                 .currency(inputCurrency.getCurrency())
@@ -18,9 +18,9 @@ public class CurrencyResponse {
                 .build();
     }
 
-    private String currency;
-    private String code;
-    private double rate;
-    private String rateFrom;
+    private final String currency;
+    private final String code;
+    private final double rate;
+    private final String rateFrom;
 
 }

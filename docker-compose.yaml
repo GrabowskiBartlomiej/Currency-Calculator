@@ -1,22 +1,22 @@
 version: "3.9"
 services:
-    database:
-        container_name: kambu_db
-        image: mysql:8 #https://hub.docker.com/_/mysql
-        environment:
-          MYSQL_ROOT_PASSWORD: coderslab
-          MYSQL_DATABASE: kambu
-          MYSQL_USER: user
-          MYSQL_PASSWORD: password
-        restart: unless-stopped
-    app:
-        container_name: kambu_app
-        build: .
-        ports:
-          - "8080:8080"
-        depends_on:
-          - database
-        environment:
-          DB_USERNAME: root
-          DB_PASSWORD: coderslab
-          DB_HOST: database
+  database:
+    container_name: kambu_db
+    image: mysql:8 #https://hub.docker.com/_/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: coderslab
+      MYSQL_DATABASE: kambu
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    restart: unless-stopped
+  app:
+    container_name: kambu_app
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+    environment:
+      DB_USERNAME: root
+      DB_PASSWORD: coderslab
+      DB_HOST: database

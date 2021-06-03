@@ -27,10 +27,10 @@ public class CurrencyConverterApplication {
     }
 
     @Bean
-    public Docket get(){
+    public Docket get() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis( RequestHandlerSelectors.basePackage( "pl.arvanity.currencyconverter.controller.currency" ) )
+                .apis(RequestHandlerSelectors.basePackage("pl.arvanity.currencyconverter.controller.currency"))
                 .build();
     }
 

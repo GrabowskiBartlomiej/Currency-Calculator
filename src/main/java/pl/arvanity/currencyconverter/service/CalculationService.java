@@ -2,7 +2,6 @@ package pl.arvanity.currencyconverter.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import pl.arvanity.currencyconverter.entity.Calculation;
 import pl.arvanity.currencyconverter.entity.Currency;
 import pl.arvanity.currencyconverter.entity.ServiceCalls;
@@ -23,16 +22,17 @@ public class CalculationService {
         this.serviceCallsRepo = serviceCallsRepo;
     }
 
-    public Calculation convertCurrency(double inputMoney, Currency from, Currency to) {
-        if (inputMoney >= 0) {
-            double rate = (from.getRate() / to.getRate());
-            double outputMoney = round(rate * inputMoney);
 
-            Calculation calculation = new Calculation(inputMoney, from.getCode(), to.getCode(), rate, outputMoney, to.getRateFrom());
+    public Calculation convertCurrency(double inputValue, Currency from, Currency to) {
+        if (inputValue >= 0) {
+            double rate = (from.getRate() / to.getRate());
+            double outputMoney = round(rate * inputValue);
+
+            Calculation calculation = new Calculation(inputValue, from.getCode(), to.getCode(), rate, outputMoney, to.getRateFrom());
             calculationRepo.save(calculation);
-            saveServiceCall(null, "POST", "Add a calculation", calculation);
+            saveServiceCall(calculation.getId(), "POST", "Add a calculation");
             return calculation;
-        }else {
+        } else {
             return null;
         }
     }
@@ -42,40 +42,40 @@ public class CalculationService {
         model.addAttribute("allCalculations", calculationRepo.findAll());
     }
 
+
     public List<Calculation> getAllCalculations() {
-        saveServiceCall(null, "GET", "Get the list of all calculations", null);
+        saveServiceCall(null, "GET", "Get the list of all calculations");
         return calculationRepo.findAll();
     }
 
+
     public void deleteOnId(Long id) {
-//        Calculation calculation = calculationRepo.findCalculationById(id);
-//        if (!(calculation == null)) {
-        saveServiceCall(id, "DELETE", "Delete the calculation on id " + id, null);
+        saveServiceCall(id, "DELETE", "Delete the calculation on id " + id);
         calculationRepo.delete(calculationRepo.findCalculationById(id));
-//        }
     }
+
 
     public Calculation getSingleCalculationOnId(Long id) {
         return calculationRepo.findCalculationById(id);
     }
 
-    public void saveServiceCall(Long id, String method, String action, Calculation calculation) {
+
+    public void saveServiceCall(Long calculationId, String method, String action) {
         ServiceCalls serviceCalls = new ServiceCalls();
         serviceCalls.setMethod(method);
         serviceCalls.setAction(action);
-        if (!(id == null)) {
-            serviceCalls = fillServiceCallWithCalculationData(serviceCalls, getSingleCalculationOnId(id));
-        }
-        if (!(calculation == null)) {
-            serviceCalls = fillServiceCallWithCalculationData(serviceCalls, calculation);
+        if (!(calculationId == null)) {
+            serviceCalls = fillServiceCallWithCalculationData(serviceCalls, getSingleCalculationOnId(calculationId));
         }
         serviceCallsRepo.save(serviceCalls);
     }
 
+
     public List<ServiceCalls> getAllServiceCalls() {
-        saveServiceCall(null, "GET", "Get the list of all service calls so far", null);
+        saveServiceCall(null, "GET", "Get the list of all service calls so far");
         return serviceCallsRepo.findAll();
     }
+
 
     public ServiceCalls fillServiceCallWithCalculationData(ServiceCalls serviceCalls, Calculation calculation) {
         serviceCalls.setInputValue(calculation.getInputValue());
@@ -94,5 +94,6 @@ public class CalculationService {
         out = out.replace(",", ".");
         return Double.parseDouble(out);
     }
+
 
 }

@@ -31,8 +31,8 @@ public class CalculatorController {
     }
 
     @PostMapping("new-calculation")
-    public String addSuccess(Model model, @RequestParam double moneyInput, @RequestParam String from, @RequestParam String to) {
-        model.addAttribute("calculation", calculationService.convertCurrency(moneyInput, currencyService.getCurrencyByCode(from), currencyService.getCurrencyByCode(to)));
+    public String addSuccess(Model model, @RequestParam double inputValue, @RequestParam String from, @RequestParam String to) {
+        model.addAttribute("calculation", calculationService.convertCurrency(inputValue, currencyService.getCurrencyByCode(from), currencyService.getCurrencyByCode(to)));
         return "summary";
     }
 

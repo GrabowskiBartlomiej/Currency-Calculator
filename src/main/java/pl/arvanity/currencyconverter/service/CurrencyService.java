@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.client.RestTemplate;
 import pl.arvanity.currencyconverter.entity.Currency;
-import pl.arvanity.currencyconverter.model.Rates;
+import pl.arvanity.currencyconverter.model.CurrencyRefresh;
 import pl.arvanity.currencyconverter.model.Table;
 import pl.arvanity.currencyconverter.repository.CurrencyRepo;
 
@@ -39,7 +39,7 @@ public class CurrencyService {
 
 
     public List<Currency> getAllCurrencies() {
-        calculationService.saveServiceCall(null, "GET", "Get the list of all currencies from database", null);
+        calculationService.saveServiceCall(null, "GET", "Get the list of all currencies from database");
         return currencyRepo.findAll();
     }
 
@@ -54,23 +54,25 @@ public class CurrencyService {
     @Scheduled(cron = "0 0 13 * * *")
     public void getAllCurrenciesFromApi() {
         Table[] table = restTemplate.getForObject("http://api.nbp.pl/api/exchangerates/tables/A?format=json", Table[].class);
-        List<Rates> rates = Arrays.asList(table[0].getCurrencies());
-        List<Currency> currencies = currencyRepo.findAll();
-        for (Rates rate : rates) {
-            if (currencies.isEmpty()) {
-                saveCurrencyInDatabase(new Currency(rate.getCurrency(), rate.getCode(), rate.getRate(), table[0].getEffectiveDate()));
+        List<CurrencyRefresh> currenciesRefreshedOnSchedule = Arrays.asList(table[0].getCurrencies());
+
+        List<Currency> currenciesInDB = currencyRepo.findAll();
+
+        for (CurrencyRefresh currencyRefreshed : currenciesRefreshedOnSchedule) {
+            if (currenciesInDB.isEmpty()) {
+                saveCurrencyInDatabase(new Currency(currencyRefreshed.getCurrency(), currencyRefreshed.getCode(), currencyRefreshed.getRate(), table[0].getEffectiveDate()));
             } else {
-                Currency currency = getCurrencyByCode(rate.getCode());
+                Currency currency = getCurrencyByCode(currencyRefreshed.getCode());
                 if (!(currency == null)) {
-                    currency.setRate(rate.getRate());
+                    currency.setRate(currencyRefreshed.getRate());
                     currency.setRateFrom(table[0].getEffectiveDate());
                 }
             }
         }
-        if(currencyRepo.findCurrencyByCode("PLN") == null){
+        if (currencyRepo.findCurrencyByCode("PLN") == null) {
             saveCurrencyInDatabase(new Currency("polski złoty", "PLN", 1, table[0].getEffectiveDate()));
         }
-        calculationService.saveServiceCall(null, "GET", "Download the currencies from NBP API and save in database", null);
+        calculationService.saveServiceCall(null, "GET", "Download the currencies from NBP API and save in database");
     }
 
 
@@ -85,7 +87,7 @@ public class CurrencyService {
                 description += code + ", ";
             }
         }
-        calculationService.saveServiceCall(null, "GET", "Get the currencies for " + description, null);
+        calculationService.saveServiceCall(null, "GET", "Get the currencies for " + description);
         return currencies;
     }
 

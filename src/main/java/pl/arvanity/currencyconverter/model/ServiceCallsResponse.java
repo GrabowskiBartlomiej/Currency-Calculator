@@ -29,15 +29,15 @@ public class ServiceCallsResponse {
     }
 
 
-    private String method;
-    private String action;
-    private double inputValue;
-    private String currencyCodeFrom;
-    private String currency;
-    private String currencyCodeTo;
-    private double outputValue;
-    private double rate;
-    private String rateFrom;
-    private Date operationDate;
+    private final String method;
+    private final String action;
+    private final double inputValue;
+    private final String currencyCodeFrom;
+    private final String currency;
+    private final String currencyCodeTo;
+    private final double outputValue;
+    private final double rate;
+    private final String rateFrom;
+    private final Date operationDate;
 
 }

@@ -35,6 +35,7 @@ public class CurrencyRestController {
     }
 
 
+    /*returning object only for purpose of showing user-friendly messages*/
     @ApiOperation(value = "Convert the money from currency A to currency B",
             notes = "The code should link as follows -> http://localhost:8080/currencies/convert?currencyCodeFrom=eur&currencyCodeTo=pln&inputMoney=1000")
     @PostMapping("/convert")
@@ -91,5 +92,6 @@ public class CurrencyRestController {
                 .map(s -> ServiceCallsResponse.of(s))
                 .collect(Collectors.toList());
     }
+
 
 }
