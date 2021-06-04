@@ -24,7 +24,7 @@ Currency calculator exercise for Kambu. Junior Java Developer.
 
 Functionalities:
 
-* loading currencies from NBP API and saving as objects in SQL DB on startup,
+* loading currencies from NBP API and saving as objects in SQL DB on startup and with @Schedule i reload new currencies every day at 1pm
 * REST:
     * returning list of all currency objects 
     * returning calculation object and saving it in DB 
